@@ -1,0 +1,6 @@
+add_fsm_state_simple(IiwaFsmController_Initial)
+
+add_fsm_state_simple(MoveTest)
+add_fsm_state_simple(Hitting)
+
+add_fsm_data_directory(data)
