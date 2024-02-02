@@ -159,6 +159,7 @@ transitions:
 # Initial state
 init: IiwaFsmController_Initial #PostureDeuxRobot
 
+
 ObserverPipelines:
 - name: iiwa14
   gui: true
