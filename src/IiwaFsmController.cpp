@@ -11,6 +11,8 @@ bool IiwaFsmController::run()
 {
   robot("iiwa14").mbc().q = realRobot("iiwa14").mbc().q;
   robot("iiwa14").mbc().alpha = realRobot("iiwa14").mbc().alpha;
+  robot("iiwa7").mbc().alpha = realRobot("iiwa7").mbc().alpha;
+  robot("iiwa7").mbc().q = realRobot("iiwa7").mbc().q;
   
   //return mc_control::fsm::Controller::run(mc_solver::FeedbackType::ObservedRobots);
   return mc_control::fsm::Controller::run(mc_solver::FeedbackType::None);

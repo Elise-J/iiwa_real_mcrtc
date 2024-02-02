@@ -20,16 +20,17 @@ VerboseStateFactory: true
 
 # Additional robots to load
 robots:
-  iiwa14:
-    module: iiwa14
-    init_pos:
-      translation: [0, 0, 0]
   # iiwa7:
   #   module: iiwa7
   #   init_pos:
-  #     translation: [0, 0, 0]
+  #     translation: [0, -1.20, 0]
+  iiwa14:
+    module: iiwa14
+    init_pos:
+      translation: [0, -1.20, 0]
+
   Box:
-    module: env/small_box
+    module: env/box
     init_pos:
       translation: [0.6, 0.4, 0.215]
       rotation: [0,0,0]
@@ -49,7 +50,28 @@ collisions:
 
 # # Implement some additional text states
 states:
-  Init:
+  # Init:
+  #   base: MetaTasks
+  #   tasks:
+  #     taskPosture:
+  #       type: posture
+  #       robot: iiwa7
+  #       name: init_iiwa7
+  #       stiffness: 20
+  #       damping: 10.0
+  #       weight: 100.0
+  #       target:
+  #         iiwa_joint_1: [0.0]
+  #         iiwa_joint_2: [0.26]
+  #         iiwa_joint_3: [0.0]
+  #         iiwa_joint_4: [-0.49]
+  #         iiwa_joint_5: [0.0]
+  #         iiwa_joint_6: [0.52]
+  #         iiwa_joint_7: [0.0]
+  #       completion:
+  #         eval: 0.01
+
+  Init14:
     base: MetaTasks
     tasks:
       taskPosture:
@@ -69,7 +91,6 @@ states:
           iiwa_joint_7: [0.0]
         completion:
           eval: 0.01
-
 
   test1:
     base: MetaTasks
@@ -121,11 +142,14 @@ states:
   IiwaHitting:
     base: Hitting
 
+  PostureDeuxRobot:
+    base: Parallel
+    states: [MoveIiwa, Init]
 # Transitions map
 transitions:
 # - [Init, OK, test1, Auto]
-# - [, OK, IiwaFsmController_Initial, Strict]
-- [IiwaFsmController_Initial, OK, MoveIiwa, Strict]
+# - [IiwaFsmController_Initial, OK, IiwaFsmController_Initial, Strict]
+- [IiwaFsmController_Initial, OK, IiwaFsmController_Initial, Strict]
 
 # - [test1, OK, test2, Auto]
 # - [test1, OK, MoveIiwa, Auto]
@@ -133,16 +157,7 @@ transitions:
 # - [IiwaHitting, OK, MoveIiwa, Auto]
 
 # Initial state
-init: IiwaFsmController_Initial
-
-
-# forceSensors:
-# - name: ftSensorTest
-#   parentBody: iiwa_link_ee
-#   X_p_f:
-#     rotation: [0, 0, 0]
-#     translation: [0, 0, 0]
-
+init: IiwaFsmController_Initial #PostureDeuxRobot
 
 ObserverPipelines:
 - name: iiwa14
@@ -153,19 +168,16 @@ ObserverPipelines:
       config:
         position: encoderValues #encoderValues  #control
         velocity: encoderVelocities #encoderFiniteDifferences #  #encoderVelocities #control
-        # torque: encoderVelocities #encoderVelocities #control
         robot: iiwa14
-
-# - name: iiwa14
-#   gui: true
-#   log: true
-#   observers:
-#     - type: Encoder
-#       config:
-#         position: control #encoderValues  #control
-#         # velocity: encoderVelocities #encoderVelocities #control
-#         torque: encoderVelocities #encoderVelocities #control
-#         robot: iiwa14
+- name: iiwa7
+  gui: true
+  log: true
+  observers:
+    - type: Encoder
+      config:
+        position: encoderValues #encoderValues  #control
+        velocity: encoderVelocities #encoderFiniteDifferences #  #encoderVelocities #control
+        robot: iiwa7
 
 # AGX / RVIZ
 - name: "BoxObservation"
